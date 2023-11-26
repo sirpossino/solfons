@@ -1,0 +1,44 @@
+classdef Synthesis <handle
+    %UNTITLED3 Summary of this class goes here
+    %   Detailed explanation goes here
+    
+    properties
+        dataSeries;
+    end
+    
+    methods
+        
+        function setDataSeries(obj, l_dataSeries)
+            obj.dataSeries = l_dataSeries;
+        end
+        
+        
+        function makeDynamics(obj, l_duration)
+           l_data = randn(1,l_duration);
+           obj.dataSeries.setNoise(l_data);
+           s = tsf('s');
+           l_Tconst = obj.dataSeries.getTimeConstant();
+           l_sys = sqrt(l_Tconst*2)/(1+l_Tconst*s);
+           l_data = sim(l_sys,l_data,1:l_duration);
+           obj.dataSeries.setDynamicNoise(l_data);
+        end
+           
+        function addTimeDependency(obj)
+            l_stdDev = obj.dataSeries.getStdDeviation();
+            l_data = obj.dataSeries.getDynamicNoise();
+            
+            l_mean = obj.dataSeries.getMean();
+            l_mean = kron(ones(length()/8760,1,l_mean)
+            
+            
+            l_data = l_data.*l_stdDev + l_mean;
+            
+        end
+            
+            
+    irradiationSynthesis.Transform();
+        
+    end
+    
+end
+

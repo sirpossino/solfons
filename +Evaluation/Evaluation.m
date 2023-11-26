@@ -1,0 +1,58 @@
+classdef Evaluation < handle
+    %UNTITLED10 Summary of this class goes here
+    %   Detailed explanation goes here
+    
+    properties
+        data;
+        syntData;
+    end
+    
+    methods
+        
+        function setDataSeries(obj, l_data, l_syntData)
+            obj.data = l_data;
+            obj.syntData = l_syntData;
+        end
+        
+        function l_ePDF = relPDF(obj)
+            l_ePDF = sqrt(sum((sort(obj.data)-sort(obj.syntData)).^2)/sum(sort(obj.data).^2));
+        end
+        
+        function l_ePDF = absPDF(obj)
+            l_ePDF = sqrt(sum((sort(obj.data)-sort(obj.syntData)).^2)/sum(sort(1+0*obj.data).^2));
+        end
+        
+        function l_eMean = relMean(obj)
+            l_eMean = (sum(obj.data)-sum(obj.syntData))/sum(obj.data);
+        end
+        
+        function l_eStdDev = relStdDev(obj)
+            l_eStdDev = (sqrt(mean((obj.syntData-mean(obj.syntData)).^2))-sqrt(mean((obj.data-mean(obj.data)).^2)))/sqrt(mean((obj.data-mean(obj.data)).^2));
+        end
+        
+        function l_eTime = relTime(obj)
+          %  l_syntCov = sqrt(mean((obj.syntData(2:end)-obj.syntData(1:end-1)).^2));
+           % l_cov = sqrt(mean((obj.data(2:end)-obj.data(1:end-1)).^2));
+          %  l_eTime = (l_syntCov - l_cov)/l_cov;
+            
+            l_syntCov = obj.correlation(obj.syntData(1:end-1),obj.syntData(2:end));
+           % l_syntCov = l_syntCov(1,2);
+            l_cov = obj.correlation(obj.data(1:end-1),obj.data(2:end));
+           % l_cov = l_cov(1,2);
+            l_eTime = (l_syntCov - l_cov)/l_cov;
+        end
+        
+        function l_eType = relType(obj,l_refData, l_syntRefData)
+            l_syntCov = obj.correlation(obj.syntData-mean(obj.syntData),l_syntRefData-mean(l_syntRefData));
+          %  l_syntCov = l_syntCov(1,2);
+            l_cov = obj.correlation(obj.data-mean(obj.data),l_refData-mean(l_refData));
+          %  l_cov = l_cov(1,2);
+            l_eType = (l_syntCov - l_cov)/l_cov;
+        end
+        
+        function l_corr = correlation(obj,l_x, l_y)
+            l_corr = sqrt(mean(l_x.*l_y));
+        end
+    end
+end
+

@@ -1,0 +1,15 @@
+classdef Irradiation < DataSeries
+    %UNTITLED5 Summary of this class goes here
+    %   Detailed explanation goes here
+    
+    properties
+    end
+    
+    methods
+        function Dataset(l_measurement)
+            measurement = l_measurement;
+        end
+    end
+    
+end
+
